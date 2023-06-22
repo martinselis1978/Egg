@@ -1,12 +1,8 @@
 package Servicio;
 
 import Entidad.Pelicula;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.LinkedList;
 import java.util.Scanner;
 
 public class PeliculaServicio {
@@ -54,7 +50,11 @@ public class PeliculaServicio {
     
 //• Ordenar las películas de acuerdo a su duración (de mayor a menor) y mostrarlo en
     public void ordenarDuracion(){
-        
+        Collections.sort(peliculas, (Pelicula p1, Pelicula p2)
+                -> p1.getDuracion().compareTo(p2.getDuracion()));    
+        for (Pelicula aux : peliculas) {
+            System.out.println(aux);
+        }
     }
     
 

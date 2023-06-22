@@ -3,12 +3,12 @@ package Entidad;
 public class Pelicula {
     private String titulo;
     private String director;
-    private int duracion;
+    private Integer duracion;
 
     public Pelicula() {
     }
 
-    public Pelicula(String titulo, String director, int duracion) {
+    public Pelicula(String titulo, String director, Integer duracion) {
         this.titulo = titulo;
         this.director = director;
         this.duracion = duracion;
@@ -22,7 +22,7 @@ public class Pelicula {
         return director;
     }
 
-    public int getDuracion() {
+    public Integer getDuracion() {
         return duracion;
     }
 
@@ -34,7 +34,7 @@ public class Pelicula {
         this.director = director;
     }
 
-    public void setDuracion(int duracion) {
+    public void setDuracion(Integer duracion) {
         this.duracion = duracion;
     }
 

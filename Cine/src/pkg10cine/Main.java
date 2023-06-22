@@ -16,10 +16,10 @@ public class Main {
         peliculaServicio.mayorUnaHora();
         System.out.println("\n---------- Peliculas ordenadas por Duración ----------\n");
         peliculaServicio.ordenarDuracion();
-//        System.out.println("\n---------- Peliculas ordenadas por Título ----------\n");
-//        peliculaServicio.ordenarTitulo();
-//        System.out.println("\n---------- Peliculas ordenadas por Director ----------\n");
-//        peliculaServicio.ordenarDirector();
+        System.out.println("\n---------- Peliculas ordenadas por Título ----------\n");
+        peliculaServicio.ordenarTitulo();
+        System.out.println("\n---------- Peliculas ordenadas por Director ----------\n");
+        peliculaServicio.ordenarDirector();
     }
     
 }
