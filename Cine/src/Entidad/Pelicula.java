@@ -1,48 +1,61 @@
 package Entidad;
 
 public class Pelicula {
+    
+//De las películas nos interesa saber
+//el título, duración, edad mínima y director.
     private String titulo;
+    private double duracion;
+    private int edadMinima;
     private String director;
-    private Integer duracion;
 
     public Pelicula() {
     }
 
-    public Pelicula(String titulo, String director, Integer duracion) {
+    public Pelicula(String titulo, double duracion, int edadMinima, String director) {
         this.titulo = titulo;
-        this.director = director;
         this.duracion = duracion;
+        this.edadMinima = edadMinima;
+        this.director = director;
     }
 
     public String getTitulo() {
         return titulo;
     }
 
-    public String getDirector() {
-        return director;
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
     }
 
-    public Integer getDuracion() {
+    public double getDuracion() {
         return duracion;
     }
 
-    public void setTitulo(String titulo) {
-        this.titulo = titulo;
+    public void setDuracion(double duracion) {
+        this.duracion = duracion;
+    }
+
+    public int getEdadMinima() {
+        return edadMinima;
+    }
+
+    public void setEdadMinima(int edadMinima) {
+        this.edadMinima = edadMinima;
+    }
+
+    public String getDirector() {
+        return director;
     }
 
     public void setDirector(String director) {
         this.director = director;
     }
 
-    public void setDuracion(Integer duracion) {
-        this.duracion = duracion;
-    }
-
     @Override
     public String toString() {
-        return "Pelicula{" + "titulo=" + titulo + ", director=" + director + ", duracion=" + duracion + '}';
+        return "Pelicula{" + "titulo=" + titulo + ", duracion=" + duracion + ", edadMinima=" + edadMinima + ", director=" + director + '}';
     }
-    
+
 }
 
 //Un cine necesita implementar un sistema en el que se puedan cargar peliculas. Para esto,

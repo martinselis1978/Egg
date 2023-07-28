@@ -1,80 +1,162 @@
 package Servicio;
 
 import Entidad.Pelicula;
+import Entidad.Asiento;
+import Entidad.Cine;
+import Entidad.Espectador;
+import Enumerada.Columna;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Scanner;
 
 public class PeliculaServicio {
-    Scanner scan = new Scanner(System.in).useDelimiter("\n");
-    ArrayList<Pelicula>peliculas = new ArrayList<>();
-//En el servicio deberemos tener un bucle que crea un objeto Pelicula pidiéndole al usuario
-//todos sus datos y guardándolos en el objeto Pelicula.
-    public Pelicula crearPelicula(){
-        System.out.println("Ingrese el título de la película");
-        String titulo = scan.next();
-        System.out.println("Ingrese el nombre del Director de la película");
-        String director = scan.next();
-        System.out.println("Ingrese la duración de la película en horas");
-        int duracion = scan.nextInt();
-        return new Pelicula(titulo, director, duracion);
-    }
-    
-//Después, esa Pelicula se guarda una lista de Peliculas y se le pregunta al usuario si quiere
-//crear otra Pelicula o no.
-    public void listaPelicula(Pelicula pelicula){
-        String continuar;
-        do{
-            peliculas.add(crearPelicula());
-            System.out.println("Desea Ingresar otra pelicula");
-            continuar = scan.next();
-        } while (continuar.equalsIgnoreCase("si")||continuar.equalsIgnoreCase("s"));
-    }
-    
-//Después de ese bucle realizaremos las siguientes acciones:22
-//• Mostrar en pantalla todas las películas.    
-    public void mostrarPelicula(){
-        for (Pelicula mostrar : peliculas) {
-            System.out.println(mostrar);
-        }
-    }
-    
-//• Mostrar en pantalla todas las películas con una duración mayor a 1 hora.
-    public void mayorUnaHora(){
-        for (Pelicula mostrar : peliculas) {
-            if (mostrar.getDuracion()>1) {
-                System.out.println(mostrar.getTitulo() + " tiene una duración de " + mostrar.getDuracion());
+   private Scanner leer = new Scanner(System.in).useDelimiter("\n");
+//    private Scanner leer = new Scanner(System.in).useDelimiter("\n");
+    //SE ABRE UN CINE CON UNA PELICULA Y PRECIO PREVIAMENTE ESTABLECIDOS, Y TODOS LOS ASIENTOS VACIOS
+
+    public Cine abrirCine() {
+        Cine c = new Cine();
+        c.setPelicula(new Pelicula("El Hobbit", 185, 18, "Fulano de Tal"));
+        c.setPrecio(110);
+
+        Asiento s[][] = new Asiento[8][6];
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 6; j++) {
+                Integer a = 8 - i;
+                String b = a.toString();
+                switch (j) {
+                    case 0:
+                        b = b.concat("A");
+                        break;
+                    case 1:
+                        b = b.concat("B");
+                        break;
+                    case 2:
+                        b = b.concat("C");
+                        break;
+                    case 3:
+                        b = b.concat("D");
+                        break;
+                    case 4:
+                        b = b.concat("E");
+                        break;
+                    case 5:
+                        b = b.concat("F");
+                        break;
+                    default:
+                        throw new AssertionError();
+                }
+                s[i][j] = new Asiento(b, null);
             }
         }
-    }
-    
-//• Ordenar las películas de acuerdo a su duración (de mayor a menor) y mostrarlo en
-    public void ordenarDuracion(){
-        Collections.sort(peliculas, (Pelicula p1, Pelicula p2)
-                -> p1.getDuracion().compareTo(p2.getDuracion()));    
-        for (Pelicula aux : peliculas) {
-            System.out.println(aux);
-        }
-    }
-    
+        c.setSala(s);
 
-//• Ordenar las películas por título, alfabéticamente y mostrarlo en pantalla.
-//pantalla.
-    public void ordenarTitulo(){
-        Collections.sort(peliculas, (Pelicula p1, Pelicula p2)
-                -> p1.getTitulo().compareTo(p2.getTitulo()));    
-        for (Pelicula aux : peliculas) {
-            System.out.println(aux);
+        ArrayList<String> a = new ArrayList();
+        for (int i = 0; i < 8; i++) {
+            for (Columna aux : Columna.values()) {
+                String asiento = (8 - i) + aux.toString();
+                a.add(asiento);
+            }
+        }
+        c.setAsientosLibres(a);
+
+        return c;
+
+    }
+
+    // MENU PARA CAMBIAR PELICULA Y PRECIO DEL CINE
+    public Cine modificarCine(Cine c) {
+        System.out.println("----- MENU CINE -----");
+        System.out.println("en desarrollo");
+        //incluir opciones de cambio de pelicula y precio de entrada
+        return c;
+    }
+
+    // SE CREA UN UNIVERSO DE POSIBLES ESPECTADORES QUE INTENTARAN INGRESAR AL CINE
+    public ArrayList<Espectador> crearPosiblesEspectadores() {
+        ArrayList<Espectador> interesados = new ArrayList();
+        int cantidad = 25 + (int) (Math.random() * 60);
+        for (int i = 0; i < cantidad; i++) {
+            Espectador e = new Espectador("Interesado " + (i + 1), (int) (Math.random() * 70), (int) (Math.random() * 1000));
+            interesados.add(e);
+        }
+        System.out.println("Cantidad de posibles espectadores: " + interesados.size());
+        return interesados;
+
+    }
+
+    // SE CONTROLAN LOS INTERESADOS Y SE COBRA Y ASIGNA UN ASIENTO DE CORRESPONDER
+    public Cine recibirPosiblesEspectadores(Cine c, ArrayList<Espectador> interesados) {
+        int rechazos = 0;
+        int recibidos = 0;
+        for (Espectador aux : interesados) {
+            if (aux.getEdad() >= c.getPelicula().getEdadMinima() && aux.getDinero() >= c.getPrecio() && c.getAsientosLibres().size() > 0) {
+                //resta dinero al visitante
+                aux.setDinero(aux.getDinero() - c.getPrecio());
+                //selecciona un lugar para ubicarlo
+                int posicionLista = (int) (Math.random() * c.getAsientosLibres().size());
+                String ubicacion = c.getAsientosLibres().get(posicionLista);
+                c.getAsientosLibres().remove(posicionLista);
+
+                Asiento visual[][] = c.getSala();
+                for (int i = 0; i < 8; i++) {
+                    for (int j = 0; j < 6; j++) {
+                        if (visual[i][j].getAsiento().equalsIgnoreCase(ubicacion)) {
+                            visual[i][j].setEspectador(aux);
+                        }
+                    }
+                }
+                recibidos++;
+            } else {
+                rechazos++;
+            }
+        }
+        System.out.println("Espectadores recibidos: " + recibidos);
+        System.out.println("Recaudación de la funcion: " + recibidos * c.getPrecio());
+        System.out.println("Ingresos rechazados por falta de edad, dinero o capacidad de sala agotada: " + rechazos);
+        return c;
+    }
+
+    // SE VISUALISA EL SUMARIO DE LA FUNCION
+    public void verSala(Cine c) {
+        System.out.println("");
+        System.out.println("Pelicula: " + c.getPelicula().getTitulo());
+        System.out.println("Duración: " + c.getPelicula().getDuracion() + " minutos");
+        System.out.println("Estado de la sala durante la función: ");
+        Asiento visual[][] = c.getSala();
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 6; j++) {
+                System.out.print(visual[i][j].toString());
+            }
+            System.out.println("");
+        }
+        System.out.println("");
+    }
+
+    public void revisarEspectadores(Cine c) {
+        Asiento visual[][] = c.getSala();
+        int ctrol = 0;
+        System.out.println("Seleccione un asiento para visualizar la información del espectador: ");
+        String asientoABuscar = leer.next();
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 6; j++) {
+                if (visual[i][j].getAsiento().equalsIgnoreCase(asientoABuscar)) {
+                    ctrol++;
+                    System.out.println("Información del espectador ubicado en "+visual[i][j].getAsiento());
+                    System.out.println(visual[i][j].getEspectador().toString());
+                    break;
+                }
+            }
+        }
+
+        if (ctrol == 0) {
+            System.out.println("Asiento invalido. Ingrese una posición válida");
+            revisarEspectadores(c);
+        }
+        System.out.println("Desea consultar otro asiento? s/n");
+        String opc = leer.next();
+        if (opc.equalsIgnoreCase("s")) {
+            revisarEspectadores(c);
         }
     }
-    
-//• Ordenar las películas por director, alfabéticamente y mostrarlo en pantalla.
-    public void ordenarDirector(){
-        Collections.sort(peliculas, (Pelicula p1, Pelicula p2)
-                -> p1.getDirector().compareTo(p2.getDirector()));    
-        for (Pelicula aux : peliculas) {
-            System.out.println(aux);
-        }
-    }
-    
+ 
 }
